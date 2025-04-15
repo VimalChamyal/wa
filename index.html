@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      background-color: white;
+      color: white;
+      font-family: Consolas, monospace;
+      padding: 20px;
+    }
+    pre {
+      background-color: white;
+      color: white;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid white;
+      margin-bottom: 30px;
+    }
+    h2 {
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+<h2>1. Hash Table using Linear Probing</h2>
+<pre>
+class HashTable:
+    def __init__(self, capacity=10):
+        self.capacity = self.get_prime(capacity)
+        self.size = 0
+        self.array = [None] * self.capacity
+
+    def hash_function(self, key):
+        return key % self.capacity
+
+    def check_prime(self, n):
+        if n <= 1:
+            return False
+        for i in range(2, n // 2):
+            if n % i == 0:
+                return False
+        return True
+
+    def get_prime(self, n):
+        if n % 2 == 0:
+            n += 1
+        while not self.check_prime(n):
+            n += 2
+        return n
+
+    def insert(self, key, data):
+        index = self.hash_function(key)
+        start_index = index
+        while self.array[index] is not None:
+            if self.array[index][0] == key:
+                self.array[index] = (key, data)
+                return
+            index = (index + 1) % self.capacity
+            if index == start_index:
+                print("Hash table is full!")
+                return
+        self.array[index] = (key, data)
+        self.size += 1
+        print(f"Key ({key}) has been inserted")
+
+    def remove(self, key):
+        index = self.hash_function(key)
+        start_index = index
+        while self.array[index] is not None:
+            if self.array[index][0] == key:
+                self.array[index] = None
+                self.size -= 1
+                print(f"Key ({key}) has been removed")
+                return
+            index = (index + 1) % self.capacity
+            if index == start_index:
+                break
+        print("This key does not exist")
+
+    def display(self):
+        for i, item in enumerate(self.array):
+            if item is None:
+                print(f"array[{i}]: /")
+            else:
+                print(f"key: {item[0]} array[{i}]: {item[1]}")
+
+    def size_of_hashtable(self):
+        return self.size
+
+
+# Driver code
+ht = HashTable()
+
+while True:
+    print("\n1.Insert\n2.Remove\n3.Size\n4.Display\nEnter your choice:")
+    choice = int(input())
+
+    if choice == 1:
+        key = int(input("Enter key: "))
+        data = int(input("Enter data: "))
+        ht.insert(key, data)
+    elif choice == 2:
+        key = int(input("Enter key to delete: "))
+        ht.remove(key)
+    elif choice == 3:
+        print("Size of Hash Table:", ht.size_of_hashtable())
+    elif choice == 4:
+        ht.display()
+    else:
+        print("Invalid Input")
+
+    cont = input("Do you want to continue (yes/no)? ").lower()
+    if cont != 'yes':
+        break
+</pre>
+
+<h2>2. Quick Sort Algorithm</h2>
+<pre>
+def swap(arr, i, j):
+    arr[i], arr[j] = arr[j], arr[i]
+
+def partition(arr, low, high):
+    pivot = arr[low]
+    i = low
+    j = high
+
+    while i < j:
+        while i <= high - 1 and arr[i] <= pivot:
+            i += 1
+        while j >= low + 1 and arr[j] > pivot:
+            j -= 1
+        if i < j:
+            swap(arr, i, j)
+
+    swap(arr, low, j)
+    return j
+
+def quick_sort(arr, low, high):
+    if low < high:
+        pi = partition(arr, low, high)
+        quick_sort(arr, low, pi - 1)
+        quick_sort(arr, pi + 1, high)
+
+# Driver code
+arr = [4, 2, 5, 3, 1]
+quick_sort(arr, 0, len(arr) - 1)
+print("Sorted array:", arr)
+
+</pre>
+
+<h2>3. Max-Heap Data Structure</h2>
+<pre>
+class MaxHeap:
+    def __init__(self):
+        self.heap = []
+
+    def swap(self, i, j):
+        self.heap[i], self.heap[j] = self.heap[j], self.heap[i]
+
+    def insert(self, val):
+        self.heap.append(val)
+        current = len(self.heap) - 1
+        while current > 0:
+            parent = (current - 1) // 2
+            if self.heap[current] > self.heap[parent]:
+                self.swap(current, parent)
+                current = parent
+            else:
+                break
+
+    def heapify(self, i):
+        size = len(self.heap)
+        largest = i
+        left = 2 * i + 1
+        right = 2 * i + 2
+
+        if left < size and self.heap[left] > self.heap[largest]:
+            largest = left
+        if right < size and self.heap[right] > self.heap[largest]:
+            largest = right
+
+        if largest != i:
+            self.swap(i, largest)
+            self.heapify(largest)
+
+    def delete(self, val):
+        size = len(self.heap)
+        for i in range(size):
+            if self.heap[i] == val:
+                break
+        self.swap(i, size - 1)
+        self.heap.pop()
+        if i < len(self.heap):
+            self.heapify(i)
+
+    def print_heap(self):
+        print("Heap:", self.heap)
+
+
+# Driver code
+h = MaxHeap()
+h.insert(3)
+h.insert(4)
+h.insert(9)
+h.insert(5)
+h.insert(2)
+
+h.print_heap()
+h.delete(4)
+print("After deleting 4:")
+h.print_heap()
+</pre>
+
+</body>
+</html>
